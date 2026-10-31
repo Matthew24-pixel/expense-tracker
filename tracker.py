@@ -1,55 +1,100 @@
-# Project: Expense Tracker | Installment 1
-# Author: <Matthew Jerard P. Garcia>
-# A simple landing page for a personal expense tracker.
+# Expense Tracker
+# Author: Matthew Jerard P. Garcia
 
-LINE = "=" * 40
 
-print(LINE)
-print("EXPENSE TRACKER")
-print("Know where your money goes.")
-print(LINE)
+def print_menu():
+    print()
+    print("MAIN MENU")
+    print("  [1] Add an expense")
+    print("  [2] View all expenses")
+    print("  [3] Show total spent")
+    print("  [4] Exit")
+    print()
 
-print()
-print("Welcome! This is your personal expense tracker.")
-print()
 
-print("MAIN MENU")
-print("  [1] Add an expense          (coming soon)")
-print("  [2] View all expenses       (coming soon)")
-print("  [3] Show total spent        (coming soon)")
-print("  [4] Exit                    (coming soon)")
+def print_summary(name, subtotal, tax_percent, budget, expenses):
+    tax = subtotal * (tax_percent / 100)
+    total = subtotal + tax
+    left = budget - total
+    over_budget = total > budget
 
-print()
-print(LINE)
-print("Made by : <Matthew Jerard P. Garcia>   |   Installment 1")
-print(LINE)
+    print()
+    print("-" * 40)
+    print("SUMMARY")
+    for item, amount in expenses:
+        print(f"  - {item}:\t${amount:.2f}")
+    print(f"Subtotal:\t\t${subtotal:.2f}")
+    print(f"Tax ({tax_percent:.1f}%):\t${tax:.2f}")
+    print(f"Grand total:\t\t${total:.2f}")
 
-name = input("\nWelcome, what should we call you? ")
-print(f"Welcome, {name}! Let's log two expenses.\n")
-item1 = input("What's your first item? ")
-amount1 = float(input("What's the amount? "))
-subtotal += amount1
-item2 = input("What's your second item? ")
-amount2 = float(input("What's the amount? "))
-subtotal += amount2
-tax_percent = float(input("Tax rate %? "))
-budget = float(input("Your budget? "))
+    if over_budget:
+        print(f"Over budget by ${total - budget:.2f}!")
+    elif total > budget * 0.90:
+        print(f"Careful: only ${left:.2f} left.")
+    else:
+        print(f"Within budget. ${left:.2f} left.")
 
-average = subtotal / 2
-tax = subtotal * (tax_percent / 100)
-total = subtotal + tax
-over_budget = total > budget
-left = budget - total
+    print("-" * 40)
+    print(f"Made by: {name} | Installment 5")
 
-print('\n' + '-' * 40)
-print("SUMMARY")
-print(f"  - {item1}:\t\t\t${amount1:.1f}")
-print(f"  - {item2}:\t\t\t${amount2:.1f}")
-print(f"Subtotal:\t\t\t${subtotal:.1f}")
-print(f"Average:\t\t\t${average:.1f}")
-print(f"Tax ({tax_percent:.1f}%):\t\t\t${tax:.1f}")
-print(f"Grand total:\t\t\t${total:.1f}")
-print(f"Over budget?\t\t\t{over_budget}")
-print(f"Left in budget:\t\t\t${left:.1f}")
-print('-' * 40)
-print("Made by: Matthew Jerard P. Garcia | Installment 3")
+
+def main():
+    print("=" * 40)
+    print("             EXPENSE TRACKER")
+    print("         Know where your money goes.")
+    print("=" * 40)
+
+    name = input("What's your name? ").strip() or "Guest"
+    tax_percent = float(input("Tax rate %? "))
+    budget = float(input("Your budget? "))
+
+    print(f"Welcome, {name}!")
+
+    subtotal = 0.0
+    expenses = []
+    choice = ""
+
+    while choice != "4":
+        print_menu()
+        choice = input("Choose 1-4: ").strip()
+
+        if choice == "1":
+            description = input("What was the expense for? ").strip() or "Expense"
+            amount = float(input("Amount? "))
+
+            if amount > 200:
+                print("  Huge expense - are you sure?")
+            elif amount > 100:
+                print("  Big expense.")
+            elif amount > 50:
+                print("  Moderate expense.")
+            else:
+                print("  Small expense.")
+
+            subtotal += amount
+            expenses.append((description, amount))
+
+        elif choice == "2":
+            if not expenses:
+                print("No expenses recorded yet.")
+            else:
+                print()
+                print("EXPENSES")
+                for item, amount in expenses:
+                    print(f"  - {item}: ${amount:.2f}")
+
+        elif choice == "3":
+            print_summary(name, subtotal, tax_percent, budget, expenses)
+
+        elif choice == "4":
+            print(f"Goodbye, {name}!")
+            print("-" * 40)
+            print(f"Made by: {name} | Installment 5")
+            print("=" * 40)
+
+        else:
+            print("Please choose 1, 2, 3 or 4.")
+
+
+if __name__ == "__main__":
+    main()
